@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/enter_message_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/enter_short_message"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"/>
+
+    <com.owl.minervacode.CircleTextView
+        android:id="@+id/circle_TextView"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:visibility="visible"
+        />
+    <ImageView
+        android:id="@+id/owl_iv"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible"
+        android:contentDescription="@string/owl_iv_cd"
+        app:srcCompat="@drawable/morse_owl"/>
+
+    <EditText
+        tools:ignore="Autofill"
+        android:id="@+id/message_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/message_et_hint"
+        android:inputType="textShortMessage"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+
+    <Button
+        android:id="@+id/encrypt_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="@string/encrypt_btn_title"/>
+
+
+</LinearLayout>

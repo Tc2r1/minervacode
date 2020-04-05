@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MinervaCode</string>
+    <string name="enter_short_message">Please Enter Short Message</string>
+    <string name="owl_iv_cd">A picture of an owl surrounded by morse code</string>
+    <string name="message_et_hint">please add your words here</string>
+    <string name="encrypt_btn_title">Encrypt</string>
+</resources>
