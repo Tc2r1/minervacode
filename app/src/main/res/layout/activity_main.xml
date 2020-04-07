@@ -17,12 +17,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"/>
 
-    <com.owl.minervacode.CircleTextView
-        android:id="@+id/circle_TextView"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:visibility="visible"
-        />
     <ImageView
         android:id="@+id/owl_iv"
         android:layout_width="260dp"
@@ -31,6 +25,12 @@
         android:visibility="visible"
         android:contentDescription="@string/owl_iv_cd"
         app:srcCompat="@drawable/morse_owl"/>
+
+    <com.owl.minervacode.CircleTextView
+        android:id="@+id/circle_TextView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:visibility="visible"/>
 
     <EditText
         tools:ignore="Autofill"

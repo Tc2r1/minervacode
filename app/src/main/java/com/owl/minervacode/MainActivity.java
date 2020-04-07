@@ -1,5 +1,6 @@
 package com.owl.minervacode;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,7 +20,6 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
 {
-
     @BindView(R.id.enter_message_tv)
     TextView enterMessage;
 
@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.encrypt_btn)
     Button encryptButton;
 
-    @BindView(R.id.circle_TextView)
     CircleTextView circleTextView;
 
     int cx = 270;
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     ArrayList arcs;
     ArrayList dots;
     String morseMessage;
-    private ArrayList<String> seperatedWords;
+    private ArrayList<String> separatedWords;
     // a simple hashMap declaration with default size and load factor
     HashMap<String, String> morse;
 
@@ -45,11 +44,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-       // setContentView(new SampleView(this));
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        encryptButton.setVisibility(View.GONE);
-//        circleTextView.setVisibility(View.GONE);
         arcs = new ArrayList();
         dots = new ArrayList();
         morse = new HashMap<>();
@@ -63,16 +59,17 @@ public class MainActivity extends AppCompatActivity
 
         // remove all special characters and numbers.
         messageToEncrypt = messageToEncrypt.replaceAll("\\P{L}", " ");
-        seperatedWords = new ArrayList<>(Arrays.asList(messageToEncrypt.split("\\W+")));
+        separatedWords = stringToMorse(messageToEncrypt);
 
-        for (String word : seperatedWords)
+        for (String word : separatedWords)
         {
             Log.wtf("WORDS ARE", word);
         }
 
-        circleTextView = new CircleTextView(this, seperatedWords);
+        circleTextView = findViewById(R.id.circle_TextView);
         circleTextView.setVisibility(View.VISIBLE);
-        stringToMorse(messageToEncrypt);
+        circleTextView.setSeparatedWords(separatedWords);
+
     }
 
 //    public voidf setup() {
@@ -82,20 +79,28 @@ public class MainActivity extends AppCompatActivity
 //        ellipseMode(RADIUS);
 //    }
 
-    public void stringToMorse(String string){
-        morseMessage = "";
+    public ArrayList<String> stringToMorse(String string){
         string = string.toLowerCase();
-        String[] words = string.split("(?!^)");
 
-        for (String letter : words)
+        ArrayList<String> wordsList = new ArrayList<>(Arrays.asList(string.split("\\W+")));
+        ArrayList<String> morseWords = new ArrayList<>();
+        for (int i = 0; i < wordsList.size(); i++)
         {
-            if (morse.containsKey(letter))
-            {
-                morseMessage += morse.get(letter) + "  ";
-            }
-        }
+            morseWords = new ArrayList<>();
+            String[] words = wordsList.get(i).split("(?!^)");
+            String morseWord = "";
 
-        Toast.makeText(this, morseMessage, Toast.LENGTH_LONG).show();
+            for (String letter: words) {
+                if (morse.containsKey(letter))
+                {
+                   morseWord += morse.get(letter)+ " ";
+                }
+
+            }
+            Log.wtf("TEST", morseWord);
+            morseWords.add(morseWord);
+        }
+        return morseWords;
     }
 
     public void setupMorseMap(){

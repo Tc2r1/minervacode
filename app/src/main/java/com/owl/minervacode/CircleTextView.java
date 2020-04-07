@@ -17,73 +17,102 @@ import com.owl.minervacode.objects.Dot;
 
 import java.util.ArrayList;
 
-public class CircleTextView extends View
-{
+public class CircleTextView extends View {
+    ArrayList<Arc> arcs;
+    ArrayList<Dot> dots;
+    private Paint mCirlcePaint;
+    private Rect textBounds;
+    private double mTextWidth, mTextHeight;
+    private int centerX, centerY;
+    private ArrayList<String> separatedWords;
+    private Path path;
+    private Paint cPaint;
+    private Paint tPaint;
+    private float radius;
+    private float diameter;
+    private float quarter;
+    private float startAngle;
+    private String circleString;
+    private Canvas canvas;
 
+    public CircleTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.separatedWords = new ArrayList<>();
+    }
 
+    public void setSeparatedWords(ArrayList<String> separatedWords) {
+        this.separatedWords = separatedWords;
+        init();
 
-        private Paint mCirlcePaint;
-        private Rect textBounds;
-        private double mTextWidth, mTextHeight;
-        private int centerX,centerY;
-        private ArrayList<String> seperatedWords;
-        private Path path;
-        private Paint cPaint;
-        private Paint tPaint;
-        private float radius;
+    }
 
-        ArrayList<Arc> arcs;
-        ArrayList<Dot> dots;
-
-        public CircleTextView(Context context, AttributeSet attrs) {
-            super(context);
-            this.seperatedWords = new ArrayList<>();
-            init();
-        }
-
-
-
-        // CONSTRUCTOR
-        public CircleTextView(Context context, ArrayList<String> seperatedWords) {
-            super(context);
-            this.seperatedWords = seperatedWords;
-            init();
-
-
-        }
-
-    private void init()
-    {
+    private void init() {
         setFocusable(true);
         path = new Path();
         tPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textBounds = new Rect();
 
         mCirlcePaint = new Paint();
-        mCirlcePaint.setStyle(Paint.Style.FILL);
-        mCirlcePaint.setColor(Color.GREEN);
+        mCirlcePaint.setStyle(Paint.Style.STROKE);
+        mCirlcePaint.setColor(Color.BLUE);
 
-        for (String ss : seperatedWords)
-        {
+        for (String ss : separatedWords) {
             Log.wtf("Word is: ", ss);
         }
+        invalidate();
     }
 
     @Override
-        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-            super.onSizeChanged(w, h, oldw, oldh);
-            centerX = w / 2;
-            centerY = h / 2;
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        centerX = w / 2;
+        centerY = h / 2;
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    protected void onDraw(Canvas canvas) {
+        this.canvas = canvas;
+        if(this.separatedWords.isEmpty())
+            return;
+
+        tPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        tPaint.setColor(Color.BLACK);
+        tPaint.setTextSize(100f);
+
+        radius = (float) (360 / (Math.PI));
+
+        diameter = radius;
+
+        for (int i = 0; i < separatedWords.size(); i++) {
+            circleString = separatedWords.get(i);
+
+            quarter = ((4.0f * radius) / 360.0f);
+            startAngle = -(radius / quarter);
+
+            Log.wtf("Data:", radius + " , StartAngle = " + startAngle);
+            tPaint.getTextBounds(circleString, 0, circleString.length(), textBounds);
+            path.reset();
+            path.addCircle(centerX, centerY, diameter, Path.Direction.CW);
+
+            for (int j = 0; j < circleString.length(); j++) {
+                canvas.rotate(startAngle, getWidth() / 2, getHeight() / 2);
+                startAngle = (radius / (circleString.length()));
+                canvas.drawTextOnPath(String.valueOf(circleString.charAt(j)), path, 0, 0, tPaint);
+            }
+            path.close();
+
+            Log.wtf("Textbound", "Radius is " + diameter);
+            diameter -= textBounds.height();
+            radius -= textBounds.height();
         }
+        canvas.rotate(0, getWidth() / 2, getHeight() / 2);
+        canvas.drawCircle(centerX, centerY, radius, mCirlcePaint);
+    }
+}
 
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        protected void onDraw(Canvas canvas) {
-
-
-            // tPaint.getTextBounds(quote, 0, quote.length(), textBounds);
-            // mTextHeight = textBounds.height(); // Use height from getTextBounds()
+// tPaint.getTextBounds(quote, 0, quote.length(), textBounds);
+// mTextHeight = textBounds.height(); // Use height from getTextBounds()
 
 //            double clenght = 0.5;
 //            for (int i = 0; i < QUOTE.length(); i++) {
@@ -100,51 +129,9 @@ public class CircleTextView extends View
 //                }
 //            }
 
-            //                mTextWidth += 1.5;
+//                mTextWidth += 1.5;
 //                if (QUOTE.charAt(i) == '-') {
 //                    mTextWidth+= 3;
 //                } else if (QUOTE.charAt(i) == ' ') {
 //                    mTextWidth += 1.5;
 //                }
-
-            tPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-            tPaint.setColor(Color.BLACK);
-            tPaint.setTextSize(100f);
-            String circleString;
-
-            radius = (float)  360f ;  //(360 / (Math.PI));
-            float diameter = radius;
-
-            for (int i = 0; i < seperatedWords.size(); i++ )
-            {
-                circleString = seperatedWords.get(i);
-
-                float quater = ((4.0f * radius) / 360.0f);
-                float startAngle = -(radius / quater);
-
-                Log.wtf("Data:", radius +  " , StartAngle = " + startAngle);
-                tPaint.getTextBounds(circleString, 0, circleString.length(), textBounds);
-                path.reset();
-                path.addCircle(centerX, centerY, diameter, Path.Direction.CW);
-
-                for (int j = 0; j < circleString.length(); j++ )
-                {
-                    canvas.rotate(startAngle, getWidth() / 2, getHeight() / 2);
-                    startAngle = (radius / (circleString.length()));
-                    canvas.drawTextOnPath(String.valueOf(circleString.charAt(j)), path, 0, 0, tPaint);
-                }
-
-
-                path.close();
-
-
-                Log.wtf("Textbound", "Radius is "+ diameter);
-                diameter -= textBounds.height();
-                // radius -= textBounds.height();
-
-            }
-            canvas.rotate(0, getWidth() / 2, getHeight() / 2);
-            //canvas.drawCircle(centerX, centerY, radius, mCirlcePaint);
-        }
-
-}
